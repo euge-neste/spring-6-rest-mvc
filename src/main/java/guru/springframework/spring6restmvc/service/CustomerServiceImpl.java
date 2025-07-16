@@ -1,22 +1,21 @@
 package guru.springframework.spring6restmvc.service;
 
-import guru.springframework.spring6restmvc.model.Customer;
+import guru.springframework.spring6restmvc.model.CustomerDTO;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class CustomerServiceImpl implements CustomerService {
 
-    private Map<UUID, Customer> customers;
+    private Map<UUID, CustomerDTO> customers;
 
     public CustomerServiceImpl() {
 
         this.customers = new HashMap<>();
 
-        Customer customer1 = Customer.builder()
+        CustomerDTO customer1 = CustomerDTO.builder()
                 .id(UUID.randomUUID())
                 .name("John")
                 .version(1)
@@ -24,7 +23,7 @@ public class CustomerServiceImpl implements CustomerService {
                 .updateDate(LocalDateTime.now())
                 .build();
 
-        Customer customer2 = Customer.builder()
+        CustomerDTO customer2 = CustomerDTO.builder()
                 .id(UUID.randomUUID())
                 .name("Steve")
                 .version(2)
@@ -38,19 +37,19 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public List<Customer> listCustomers() {
+    public List<CustomerDTO> listCustomers() {
         return new ArrayList<>(customers.values());
     }
 
     @Override
-    public Customer getCustomerById(UUID id) {
-        return customers.get(id);
+    public Optional<CustomerDTO> getCustomerById(UUID id) {
+        return Optional.of(customers.get(id));
     }
 
     @Override
-    public Customer saveNewCustomer(Customer customer) {
+    public CustomerDTO saveNewCustomer(CustomerDTO customer) {
 
-        Customer savedCustomer = Customer.builder()
+        CustomerDTO savedCustomer = CustomerDTO.builder()
                 .id(UUID.randomUUID())
                 .name(customer.getName())
                 .version(customer.getVersion())
@@ -64,15 +63,23 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void updateCustomerById(UUID id, Customer customer) {
-        Customer savedCustomer = customers.get(id);
+    public Optional<CustomerDTO> updateCustomerById(UUID id, CustomerDTO customer) {
+        CustomerDTO savedCustomer = customers.get(id);
         savedCustomer.setName(customer.getName());
         savedCustomer.setVersion(customer.getVersion());
         customers.put(savedCustomer.getId(), savedCustomer);
+
+        return Optional.of(savedCustomer);
     }
 
     @Override
-    public void deleteCustomerByID(UUID id) {
+    public Boolean deleteCustomerByID(UUID id) {
         customers.remove(id);
+        return true;
+    }
+
+    @Override
+    public Optional<CustomerDTO> patchCustomerByID(UUID id, CustomerDTO customer) {
+        return Optional.empty();
     }
 }
