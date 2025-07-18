@@ -4,6 +4,7 @@ import guru.springframework.spring6restmvc.mappers.BeerMapper;
 import guru.springframework.spring6restmvc.model.BeerDTO;
 import guru.springframework.spring6restmvc.repositories.BeerRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -18,11 +19,11 @@ import java.util.stream.Collectors;
 @Service
 @Primary
 @RequiredArgsConstructor
+@Slf4j
 public class BeerServiceJPA implements BeerService {
 
     private final BeerRepository beerRepository;
     private final BeerMapper beerMapper;
-
     @Override
     public List<BeerDTO> listBeers() {
         return beerRepository.findAll()
@@ -80,8 +81,8 @@ public class BeerServiceJPA implements BeerService {
 
         beerRepository.findById(beerId).ifPresentOrElse(foundBeer -> {
 
-            if (StringUtils.hasText(foundBeer.getBeerName())) {
-                foundBeer.setBeerName(foundBeer.getBeerName());
+            if (StringUtils.hasText(beer.getBeerName())) {
+                foundBeer.setBeerName(beer.getBeerName());
             }
 
             if (beer.getBeerStyle() != null) {
@@ -96,15 +97,18 @@ public class BeerServiceJPA implements BeerService {
                 foundBeer.setQuantityOnHand(beer.getQuantityOnHand());
             }
 
-            if (StringUtils.hasText(foundBeer.getUpc())) {
+            if (StringUtils.hasText(beer.getUpc())) {
                 foundBeer.setUpc(beer.getUpc());
             }
+
+            log.info(foundBeer.getUpc());
 
             atomicBeerDTO.set(Optional.of(beerMapper.beerToBeerDto(beerRepository.save(foundBeer))));
 
         }, () -> {
             atomicBeerDTO.set(Optional.empty());
         });
+
 
         return atomicBeerDTO.get();
     }
