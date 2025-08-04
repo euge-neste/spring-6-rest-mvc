@@ -79,6 +79,7 @@ public class BeerServiceJPA implements BeerService {
 
         AtomicReference<Optional<BeerDTO>> atomicBeerDTO = new AtomicReference<>();
 
+
         beerRepository.findById(beerId).ifPresentOrElse(foundBeer -> {
 
             if (StringUtils.hasText(beer.getBeerName())) {
