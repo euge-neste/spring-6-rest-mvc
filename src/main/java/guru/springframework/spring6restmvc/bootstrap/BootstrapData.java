@@ -1,4 +1,4 @@
-package main.java.guru.springframework.spring6restmvc.bootstrap;
+package guru.springframework.spring6restmvc.bootstrap;
 
 import guru.springframework.spring6restmvc.entities.Beer;
 import guru.springframework.spring6restmvc.entities.Customer;
