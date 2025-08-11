@@ -1,0 +1,2 @@
+ALTER TABLE beer DROP CHECK beer_chk_1;
+ALTER TABLE beer ADD CONSTRAINT beer_chk_1 CHECK (beer_style BETWEEN 0 AND 9);
